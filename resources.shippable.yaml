@@ -4,6 +4,7 @@ resources:
   - name: rs-dockercli
     type: cliConfig
     integration: "docker"
+    flags: rs-dockercli
 
 #CLUSTERS
   - name: rs-ddccluster
@@ -11,7 +12,8 @@ resources:
     integration: ddc
     pointer:
       sourceName : "nothing" #we can anything because it is mandatory but ddc doesnot have clusters
-
+    flags: rs-dockercli
+    
 #DOCKER OPTIONS
   - name: rs-dockeroptions
     type: dockerOptions
@@ -46,6 +48,9 @@ resources:
       buildOnPullRequest: true
       buildOnRelease: true
       buildOnTagPush: true
+      flags: 
+        - rs-gitrepo
+        - rs-gitrepomultipleflags
       
 #IMAGES
   - name: rs-image
@@ -55,6 +60,7 @@ resources:
       sourceName: "shippabledocker/pipelinev2"
     seed:
       versionName: "deploy.1"
+    flags: rs-image    
 
 #INTEGRATION
   - name: rs-dockerintegration
