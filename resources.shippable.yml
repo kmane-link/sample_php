@@ -1,0 +1,116 @@
+resources:
+
+#CLICONFIG
+  - name: rs-dockercli
+    type: cliConfig
+    integration: "docker"
+
+#CLUSTERS
+  - name: rs-ddccluster
+    type: cluster
+    integration: ddc
+    pointer:
+      sourceName : "nothing" #we can anything because it is mandatory but ddc doesnot have clusters
+
+#DOCKER OPTIONS
+  - name: rs-dockeroptions
+    type: dockerOptions
+    version:
+      memory: 100
+      
+  - name: rs-dockeroptions2
+    type: dockerOptions
+    version:
+      memoryReservations: 64
+      
+#FILES
+  - name: rs-files
+    type: file
+    integration: docker
+    pointer:
+      sourceName: "random"
+    seed:
+      versionName: "random-2"
+
+#GITREPO:
+  - name: rs-gitrepo
+    type: gitRepo
+    integration: "github"
+    pointer:
+      sourceName: "Varsha-Arun/sample_pipelines"
+      branch: master
+      #tags:
+       # only:
+        #  - v1.*
+      buildOnCommit: true    
+      buildOnPullRequest: true
+      buildOnRelease: true
+      buildOnTagPush: true
+      
+#IMAGES
+  - name: rs-image
+    type: image
+    integration: docker
+    pointer:
+      sourceName: "shippabledocker/pipelinev2"
+    seed:
+      versionName: "deploy.1"
+
+#INTEGRATION
+  - name: rs-dockerintegration
+    type: integration
+    integration: "docker"
+
+#LOAD BALANCER
+  - name: rs-loadbalancer
+    type: loadBalancer
+    pointer:
+      sourceName: EC2Contai-EcsElast-GPCOXIIKWPUJSREYA
+
+#NOTIFICATIONS
+  - name: rs-slack
+    type: notification
+    integration: "slack"
+    pointer:
+      recipients:
+        - "#pipeline-pvt"
+        - "#pipeline-public"
+        - "@shiphitchcock1"
+        - "#random"
+
+#PARAMS
+  - name: rs-params
+    type: params
+    version:
+      params:
+        foo: bar
+        secure: vrzA7eiJMV5mOlo1Sx5NWH5PDKIDrjCcfI3eY0XY5jqO1BU7K83z/JG8Ar6dBABpQ4raKMRX6+K0QvZFJ176yl7mvU01vBsuDG9JmpljNyBrf0uW+I6WFI5vPcf+ajrWxNBEIRRqQ2n0wPauT6aLMMAcJ1os05QqyewuTEuN4+RaNT3uBqv8nwN2FwUcit1PtbABrdYNZyEx0rQv/3PbnruFOggat1QzCPnEJx/lm1f0xKrsm3EgwGXcoLKKrM7u3SHV/erqvpSpGTdgphs0RmKOrtQ6I1Y+JgaK1gylu+esAxAwhQGirzwkV4QEo8OpzTiG5l1rzTcae427Lig28A==
+        DB_HOST: "ds015700.mlab.com"
+        DB_NAME: "ayeaye"
+        DB_PORT: "15700"
+        DB_USERNAME: "aye0aye"
+        DB_PASSWORD: "aye0aye"
+        ENVIRONMENT: "test-aws"
+       
+#REPLICAS
+  - name: rs-replica
+    type: replicas
+    version:
+      count: 2
+
+#STATE
+  - name: rs-state
+    type: state
+    
+#TIME
+  - name: rs-testtime
+    type: time
+    seed:
+      interval: "1 1 1 * *" #"*/9 * 9 9 *"
+      
+#VERSIONS
+
+  - name: rs-version
+    type: version
+    seed:
+      versionName: "5.11.1"
