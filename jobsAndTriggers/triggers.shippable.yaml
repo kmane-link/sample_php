@@ -5,3 +5,4 @@ triggers:
     type: trigger
     version:
       counter: 0
+    flags: rs-tg1
