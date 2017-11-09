@@ -1,0 +1,103 @@
+jobs:
+
+#DEPLOY  
+  - name: rs-ddcdeploy
+    type: deploy
+    allowPublicAccess: true
+    steps:
+      - IN: rs-ddccluster
+      - IN: rs-manifest
+        switch: off
+      - IN: rs-params
+      - IN: rs-dockeroptions
+      - IN: rs-replica
+        #versionNumber: 1000 
+        
+#JENKINSJOB
+#  - name: rs-jenkins                 # a memorable, unique name. this is how your job will be referred to in shippable pipelines
+ #   type: jenkinsJob                  # The type of the job (should not be changed by the user)
+ #   integration: "jenkins"            # The name of your Jenkins integration (created via accountSettings page)
+  #  pointer:
+ #     sourceName: "firstjob1"         # The name of your Jenkins job
+  #  steps:
+  #    - OUT: "rs-files" 
+
+#MANIFESTS
+  - name: rs-manifest
+    type: manifest
+    steps:
+      - IN: rs-image
+      # versionNumber: 100
+      #- OUT: rs-image4invalidformat
+      #- IN: rs-tg1
+    allowPublicAccess: true
+
+#PROVISION
+  - name: rs-provision                                              #required
+    type: provision                                                  #required
+    steps:
+      - IN: rs-files 
+      
+#RELEASE
+  - name: rs-release
+    type: release
+    #allowPublicAccess: true
+    on_start:
+      - NOTIFY: rs-slack
+    steps:
+      - IN: rs-version
+         #versionName: testrelease
+      - IN: rs-inrunSh
+      - TASK: managed
+        bump: rc
+    flags:
+      - rs-release    
+    on_success:
+      - NOTIFY: rs-slack
+    on_failure:
+      - NOTIFY: rs-slack
+
+#RUNCI
+  - name: sample_php_runCI
+    type: runCI
+    #allowPublicAccess: true
+    steps:
+      - IN: rs-dockercli
+         #versionName: testrelease
+
+#RUNSH      
+  - name: rs-inrunSh
+    type: runSh
+    allowPublicAccess: true
+    on_start:
+      - NOTIFY: rs-slack
+      - script: echo 'on start'
+    steps:
+      - IN: rs-gitrepo
+      # versionName: testsha
+      - TASK:
+        - script: ls
+        - script: ./IN/rs-gitrepo/gitRepo/echo.sh
+        - script: export FOO=foo1
+        - script: echo $FOO
+     # - OUT: rs-image2invalidimg    
+    on_success:
+      - script: echo 'Success'
+    on_failure:
+      - script: echo 'Failure runSh'
+      - NOTIFY: rs-slack
+
+#RUNCLI      
+  - name: rs-inrunCLI
+    type: runCLI
+    allowPublicAccess: true
+    steps:
+      - IN: rs-gitrepo
+      # versionName: testsha
+      - IN: rs-dockercli
+      - IN: rs-testtime
+      - IN: rs-loadbalancer
+      - IN: rs-files
+      - TASK:
+        - script: ls
+        - script: ./IN/rs-gitrepo/gitRepo/echo.sh
