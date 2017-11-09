@@ -12,6 +12,7 @@ jobs:
       - IN: rs-dockeroptions
       - IN: rs-replica
         #versionNumber: 1000 
+    flags: rs-ddcdeploy
         
 #JENKINSJOB
 #  - name: rs-jenkins                 # a memorable, unique name. this is how your job will be referred to in shippable pipelines
@@ -31,6 +32,7 @@ jobs:
       #- OUT: rs-image4invalidformat
       #- IN: rs-tg1
     allowPublicAccess: true
+    flags: rs-manifest 
 
 #PROVISION
   - name: rs-provision                                              #required
@@ -86,7 +88,10 @@ jobs:
     on_failure:
       - script: echo 'Failure runSh'
       - NOTIFY: rs-slack
-
+    flags:
+      - rs-inrunSh
+      - rs-inrunShmultipleflags
+      
 #RUNCLI      
   - name: rs-inrunCLI
     type: runCLI
